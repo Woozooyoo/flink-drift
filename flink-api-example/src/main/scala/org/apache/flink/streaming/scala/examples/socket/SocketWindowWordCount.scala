@@ -40,7 +40,7 @@ object SocketWindowWordCount {
 
     // the host and the port to connect to
     var hostname: String = "localhost"
-    var port: Int = 0
+    var port: Int = 9999
 
     try {
       val params = ParameterTool.fromArgs(args)
