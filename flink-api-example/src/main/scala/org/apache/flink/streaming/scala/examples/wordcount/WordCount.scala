@@ -40,7 +40,7 @@ object WordCount {
     env.getConfig.setGlobalJobParameters(params)
 
     // get input data
-    val text =
+    val text: DataStream[String] =
     // read the text file from given input path
     if (params.has("input")) {
       env.readTextFile(params.get("input"))
@@ -53,7 +53,7 @@ object WordCount {
 
     val counts: DataStream[(String, Int)] = text
       // split up the lines in pairs (2-tuples) containing: (word,1)
-      .flatMap(_.toLowerCase.split("\\W+"))
+      .flatMap(_.toLowerCase.split("\\W+")) //[^A-Za-z0-9_]
       .filter(_.nonEmpty)
       .map((_, 1))
       // group by the tuple field "0" and sum up tuple field "1"

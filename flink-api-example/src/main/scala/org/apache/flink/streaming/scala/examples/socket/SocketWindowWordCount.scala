@@ -64,8 +64,8 @@ object SocketWindowWordCount {
     val text: DataStream[String] = env.socketTextStream(hostname, port, '\n')
 
     // parse the data, group it, window it, and aggregate the counts 
-    val windowCounts = text
-          .flatMap { w => w.split("\\s") }
+    val windowCounts: DataStream[WordWithCount] = text
+          .flatMap { _.split("\\s") } //\f\n\r\t\v
           .map { w => WordWithCount(w, 1) }
           .keyBy("word")
           .timeWindow(Time.seconds(5))
