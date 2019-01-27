@@ -71,8 +71,8 @@ object WindowWordCount {
     // make parameters available in the web interface
     env.getConfig.setGlobalJobParameters(params)
 
-    val windowSize = params.getInt("window", 250)
-    val slideSize = params.getInt("slide", 150)
+    val windowSize = params.getInt("window", 10)
+    val slideSize = params.getInt("slide", 5)
 
     val counts: DataStream[(String, Int)] = text
       // split up the lines in pairs (2-tuple) containing: (word,1)
