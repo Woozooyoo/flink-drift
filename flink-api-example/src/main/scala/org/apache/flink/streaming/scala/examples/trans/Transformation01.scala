@@ -16,7 +16,7 @@ object Transformation01 {
     /*2. FlatMap操作*/
     val stream2 = env.readTextFile("./flink-api-example/src/main/resources/test00.txt")
     val streamFlat = stream2.flatMap(item => item.split(" ")) //split后，是string数组，flatmap把数组也打散
-//    streamFlat.print()  //一行一个线程
+    streamFlat.print()  //一行一个线程
 
     /*3. Filter操作 */
     val stream3 = env.generateSequence(1, 10)
@@ -58,7 +58,7 @@ object Transformation01 {
 
     val streamUnion = stream01.union(stream02)
 
-    streamUnion.print()
+//    streamUnion.print()
 
     env.execute("FirstJob")
   }
