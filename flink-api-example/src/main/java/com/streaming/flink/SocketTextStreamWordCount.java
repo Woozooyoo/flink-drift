@@ -62,6 +62,7 @@ public class SocketTextStreamWordCount {
 							}
 						})
 						.window(TumblingEventTimeWindows.of(Time.seconds(10)))
+								//**所能接收的最大延时时间，延缓窗口内置状态清理时间
 //                              .allowedLateness(Time.milliseconds(10000))
 						.apply(
 								new WindowFunction<HashMap<String,String>, Tuple2<String,String>, Object, TimeWindow>() {
