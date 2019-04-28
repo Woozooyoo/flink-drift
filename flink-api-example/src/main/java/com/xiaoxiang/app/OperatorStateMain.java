@@ -7,7 +7,10 @@ import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 import org.apache.flink.streaming.api.functions.sink.SinkFunction;
 
 /**
- * Created by yuhailin.
+ * 唯一绑定到特定operator (flatmap map )没有key的
+ * 与key无关
+ *
+ * 数据结构：ListState<T>
  */
 public class OperatorStateMain {
 
@@ -26,12 +29,8 @@ public class OperatorStateMain {
 
         env.fromElements(1L,2L,3L,4L,5L,1L,3L,4L,5L,6L,7L,1L,4L,5L,3L,9L,9L,2L,1L)
                 .flatMap(new CountWithOperatorState())
-                .addSink(new SinkFunction<String>() {
-                    @Override
-                    public void invoke(String s) throws Exception {
-
-                    }
-                });
+                .print()
+        ;
 
     }
 

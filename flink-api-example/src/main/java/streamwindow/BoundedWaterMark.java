@@ -1,4 +1,4 @@
-package com.streaming.flink;
+package streamwindow;
 
 import org.apache.flink.streaming.api.functions.timestamps.BoundedOutOfOrdernessTimestampExtractor;
 import org.apache.flink.streaming.api.windowing.time.Time;

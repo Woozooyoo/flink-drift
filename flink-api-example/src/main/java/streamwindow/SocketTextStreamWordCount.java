@@ -1,4 +1,4 @@
-package com.streaming.flink;
+package streamwindow;
 
 import org.apache.flink.api.common.functions.FlatMapFunction;
 import org.apache.flink.api.java.functions.KeySelector;
@@ -61,8 +61,9 @@ public class SocketTextStreamWordCount {
 								return map.get("uid");
 							}
 						})
+						//WindowOperator!!!!
 						.window(TumblingEventTimeWindows.of(Time.seconds(10)))
-								//**所能接收的最大延时时间，延缓窗口内置状态清理时间
+								//**所能接收的最大延时时间，延缓窗口内置状态清理时间,允许10秒的数据延时 30-40fire后,再来30会有,40会有,延缓了窗口处理时间
 //                              .allowedLateness(Time.milliseconds(10000))
 						.apply(
 								new WindowFunction<HashMap<String,String>, Tuple2<String,String>, Object, TimeWindow>() {

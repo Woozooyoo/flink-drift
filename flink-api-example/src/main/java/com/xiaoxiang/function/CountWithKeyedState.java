@@ -9,11 +9,6 @@ import org.apache.flink.api.java.tuple.Tuple2;
 import org.apache.flink.configuration.Configuration;
 import org.apache.flink.util.Collector;
 
-/**
- * Created by yuhailin.
- */
-
-
 /*
  * without implements checkpoint
  *
@@ -21,6 +16,8 @@ import org.apache.flink.util.Collector;
  *
  * RichFlatMapFunction 为有状态函数，因为可以获取getRuntimeContext().getstate
  *
+ * KeyedState 数据value list map的状态都是传到本地rocksDb（因为会有OperatorState*key个数的state，内存翻倍存放不行）
+ * OperatorState写进本地内存 适合保存不是很大的状态场景
  */
 public class CountWithKeyedState extends RichFlatMapFunction<Tuple2<Long, Long>, Tuple2<Long, Long>> {
 
@@ -41,7 +38,7 @@ public class CountWithKeyedState extends RichFlatMapFunction<Tuple2<Long, Long>,
         // add the second field of the input value
         currentSum.f1 += input.f1;
 
-        // update the state
+        // update the state  UPdate rocksDB
         sum.update(currentSum);
 
         // if the count reaches 2, emit the average and clear the state
@@ -51,7 +48,7 @@ public class CountWithKeyedState extends RichFlatMapFunction<Tuple2<Long, Long>,
         }
     }
 
-
+/** function触发的时候会调用一次*/
     @Override
     public void open(Configuration config) {
         ValueStateDescriptor<Tuple2<Long, Long>> descriptor =
@@ -59,5 +56,9 @@ public class CountWithKeyedState extends RichFlatMapFunction<Tuple2<Long, Long>,
                         "average", // the state name
                         TypeInformation.of(new TypeHint<Tuple2<Long, Long>>(){})); // default value of the state, if nothing was set
         sum = getRuntimeContext().getState(descriptor);
+
+        /*如果是implement CheckpointedFunction*/
+//	    functionInitializationContext.getKeyedStateStore().getState(listStateDescriptor);
+
     }
 }

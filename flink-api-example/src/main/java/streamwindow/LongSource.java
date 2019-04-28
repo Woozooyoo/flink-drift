@@ -1,4 +1,4 @@
-package com.streaming.flink.transformation;
+package streamwindow;
 
 import org.apache.flink.streaming.api.functions.source.RichParallelSourceFunction;
 

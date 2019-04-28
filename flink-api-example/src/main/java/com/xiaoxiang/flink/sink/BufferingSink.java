@@ -16,7 +16,7 @@ import java.util.List;
 
 public class BufferingSink implements SinkFunction<Tuple2<String, Integer>>, CheckpointedFunction {
 
-    private final int threshold;
+    private final int threshold;    //buffer
 
     private transient ListState<Tuple2<String, Integer>> checkpointedState;
 
@@ -30,7 +30,7 @@ public class BufferingSink implements SinkFunction<Tuple2<String, Integer>>, Che
     @Override
     public void invoke(Tuple2<String, Integer> value) throws Exception {
         bufferedElements.add(value);
-        if (bufferedElements.size() == threshold) {
+        if (bufferedElements.size() == threshold) { //buffer reach to threshold
             for (Tuple2<String, Integer> element: bufferedElements) {
                 // send it to the sink
             }

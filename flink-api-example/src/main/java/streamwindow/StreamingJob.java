@@ -1,4 +1,4 @@
-package com.streaming.flink;
+package streamwindow;
 
 /**
  * Licensed to the Apache Software Foundation (ASF) under one

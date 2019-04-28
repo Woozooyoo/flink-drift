@@ -16,7 +16,7 @@ object Transformation01 {
     /*2. FlatMap操作*/
     val stream2 = env.readTextFile("./flink-api-example/src/main/resources/test00.txt")
     val streamFlat = stream2.flatMap(item => item.split(" ")) //split后，是string数组，flatmap把数组也打散
-    streamFlat.print()  //一行一个线程
+//    streamFlat.print()  //一行一个线程
 
     /*3. Filter操作 */
     val stream3 = env.generateSequence(1, 10)
@@ -39,7 +39,7 @@ object Transformation01 {
     val stream = env.readTextFile("./flink-api-example/src/main/resources/test00.txt")
       .flatMap(item => item.split(" "))
 
-    val streamSplit = stream.split(
+    val streamSplit: SplitStream[String] = stream.split(
       word =>
         ("wisdom".equals(word)) match {
           case true => List("wisdom")

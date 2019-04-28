@@ -16,7 +16,8 @@ public class WindowWordCountj {
 				.flatMap (new Splitter ())
 				.keyBy (0)
 				.timeWindow (Time.seconds (5))
-				.sum (1);
+				.sum (1)
+				;
 
 		dataStream.print ();
 

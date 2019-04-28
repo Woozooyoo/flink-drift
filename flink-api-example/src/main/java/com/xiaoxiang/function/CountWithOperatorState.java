@@ -14,22 +14,24 @@ import org.apache.flink.util.Collector;
 import java.util.List;
 
 /*
- *
+ *   Kafka Connector
+ *    Each parallel instance of the Kafka consumer
+ *    maintains a map of topic partitions and offsets as its Operator State.
  *   假设事件场景为某业务事件流中有事件 1、2、3、4、5、6、7、8、9 ......
  *
  *   现在，想知道两次事件1之间，一共发生了多少次其他的事件，分别是什么事件，然后输出相应结果。
  *   如下:
  *    事件流 1 2 3 4 5 1 3 4 5 6 7 1 4 5 3 9 9 2 1 ....
- *    输出  4     2 3 4 5
- *          5     3 4 5 6 7
- *          8     4 5 3 9 9 2
+ *    输出  4个     2 3 4 5
+ *          5个     3 4 5 6 7
+ *          6个     4 5 3 9 9 2
  *
  */
 public class CountWithOperatorState extends RichFlatMapFunction<Long,String> implements CheckpointedFunction {
     /*
      *  保存结果状态
      */
-    private transient ListState<Long>  checkPointCountList;
+    private transient ListState<Long>  checkPointCountList;//状态链表
     private List<Long> listBufferElements;
 
     @Override
@@ -63,7 +65,9 @@ public class CountWithOperatorState extends RichFlatMapFunction<Long,String> imp
                         "listForThree",
                         TypeInformation.of(new TypeHint<Long>() {}));
 
+        //如果原来operator有数据，会把原来状态里的数据恢复到checkPointCountList
         checkPointCountList = functionInitializationContext.getOperatorStateStore().getListState(listStateDescriptor);
+        //如果是恢复的，把checkPointCountList的数据add到listBufferElements
         if (functionInitializationContext.isRestored()) {
             for (Long element : checkPointCountList.get()) {
                 listBufferElements.add(element);

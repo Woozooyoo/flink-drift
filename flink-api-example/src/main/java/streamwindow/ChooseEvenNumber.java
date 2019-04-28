@@ -1,6 +1,5 @@
-package com.streaming.flink;
+package streamwindow;
 
-import com.streaming.flink.transformation.LongSource;
 import org.apache.flink.api.common.functions.RichFilterFunction;
 import org.apache.flink.configuration.Configuration;
 import org.apache.flink.metrics.Counter;

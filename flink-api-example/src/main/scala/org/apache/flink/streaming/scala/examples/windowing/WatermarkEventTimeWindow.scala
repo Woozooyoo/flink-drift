@@ -22,7 +22,8 @@ object WatermarkEventTimeWindow {
         override def extractTimestamp(element: String): Long = {
           // EventTime是日志生成时间，我们从日志中解析EventTime，空格分隔第一个元素是时间
           val eventTime = element.split(" ")(0).toLong
-          println(eventTime)
+          println("timestamp:" + eventTime)
+          println("last watermark:" + super.getCurrentWatermark.getTimestamp)
           // milliseconds
           eventTime
         }
