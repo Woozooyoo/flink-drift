@@ -65,16 +65,16 @@ object Launcher {
     producer.setLogFailuresOnly(false)
     producer.setFlushOnCheckpoint(true)
 
-      /*confStream **/
+      /*confStream 配置流**/
     val confStream = env.addSource(new ConfSource(args(5)))
       .setParallelism(1)
       .broadcast
 
 
-    env.addSource(consumer)
-      .connect(confStream)
-      .flatMap(new ApplyComputeRule)
-      .assignTimestampsAndWatermarks(new BoundedLatenessWatermarkAssigner(args(6).toInt))
+    env.addSource(consumer)//业务流
+      .connect(confStream)//配置流
+      .flatMap(new ApplyComputeRule)//规则匹配 里面使用了 业务流和配置流的 过滤和线上业务转换逻辑
+      .assignTimestampsAndWatermarks(new BoundedLatenessWatermarkAssigner(args(6).toInt))//用了keyBy窗口需要提取wm
       .keyBy(FIELD_KEY)
       .window(TumblingEventTimeWindows.of(Time.minutes(1)))
       .reduce(_ + _)

@@ -10,16 +10,26 @@ import scala.collection.mutable
 import scala.collection.mutable.ArrayBuffer
 
 /**
-  * Created by luojiangyu on 3/18/18.
+  * 对LogEvent(业务数据) 和 ComputeConf两个流的 输入类
   */
-class ApplyComputeRule extends CoFlatMapFunction[LogEvent, ComputeConf, ComputeResult]{
+class ApplyComputeRule extends CoFlatMapFunction[LogEvent, ComputeConf, ComputeResult/*输出*/]{
 
   private var computeConf = ComputeConf(0, Array())
 
+  /**
+    * 第二个配置流的逻辑 更新配置 computeConf
+    * @param in2
+    * @param collector
+    */
   override def flatMap2(in2: ComputeConf, collector: Collector[ComputeResult]): Unit = {
     computeConf = in2
   }
 
+  /**
+    * 第一个业务流 LogEvent要做的逻辑
+    * @param logEvent
+    * @param collector
+    */
   override def flatMap1(logEvent: LogEvent, collector: Collector[ComputeResult]): Unit = {
     applyConfToLog(logEvent, computeConf).foreach(collector.collect)
   }

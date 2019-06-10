@@ -12,7 +12,7 @@ class BoundedLatenessWatermarkAssigner(allowLateness: Int) extends AssignerWithP
   private var maxTimestamp = -1L
 
   override def getCurrentWatermark: Watermark = {
-    new Watermark(maxTimestamp - allowLateness * 1000L)
+    new Watermark(maxTimestamp - allowLateness * 1000L)//能容忍的延迟是多少
   }
 
   override def extractTimestamp(t: ComputeResult, l: Long): Long = {
